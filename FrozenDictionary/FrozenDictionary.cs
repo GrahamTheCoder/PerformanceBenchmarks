@@ -1,12 +1,11 @@
 using System.Collections.Frozen;
 using System.Collections.Immutable;
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Running;
 
-namespace DotNet8;
+namespace DotNet8.FrozenDictionary;
 
-public class LookupBenchmark
+public class FrozenDictionary
 {
 
     [Params(2000, 10000)] public int UpperLimit;
@@ -17,8 +16,8 @@ public class LookupBenchmark
     private IDictionary<int, string> _unoptimisedFrozenDictionary;
     private IDictionary<int, string> _optimisedFrozenDictionary;
     private ImmutableArray<string?> _immutableArray;
-    
-    public static void Main(string[] args) => BenchmarkRunner.Run<LookupBenchmark>(
+
+    public static void Main(string[] args) => BenchmarkRunner.Run<FrozenDictionary>(
 #if DEBUG
         new DebugInProcessConfig()
 #endif
@@ -32,10 +31,10 @@ public class LookupBenchmark
         var randomKeyValuePairs = GetRandomKeyValuePairs(EntryCount)
             .GroupBy(x => x.Key).Select(g => g.First()).ToArray();
 
-        _dictionary = randomKeyValuePairs.ToDictionary(x => x.Key, x=> x.Value);
+        _dictionary = randomKeyValuePairs.ToDictionary(x => x.Key, x => x.Value);
         _unoptimisedFrozenDictionary = randomKeyValuePairs.ToFrozenDictionary(false);
         _optimisedFrozenDictionary = randomKeyValuePairs.ToFrozenDictionary(true);
-        
+
         var sparseArray = new string?[UpperLimit + 1];
         foreach (var kvp in randomKeyValuePairs)
         {
