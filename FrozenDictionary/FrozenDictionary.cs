@@ -1,9 +1,10 @@
 using System.Collections.Frozen;
 using System.Collections.Immutable;
 using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Running;
 
-namespace DotNet8.FrozenDictionary;
+namespace DotNet8Benchmarks.FrozenDictionary;
 
 public class FrozenDictionary
 {
@@ -17,11 +18,6 @@ public class FrozenDictionary
     private IDictionary<int, string> _optimisedFrozenDictionary;
     private ImmutableArray<string?> _immutableArray;
 
-    public static void Main(string[] args) => BenchmarkRunner.Run<FrozenDictionary>(
-#if DEBUG
-        new DebugInProcessConfig()
-#endif
-        );
 
     [GlobalSetup]
     public void GlobalSetup()
